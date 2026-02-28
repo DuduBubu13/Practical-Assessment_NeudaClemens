@@ -1,14 +1,14 @@
 import math
 
-def sigmoid(z):
-    return 1 / (1 + math.exp(-z))
+def sigmoid(linear_combination):
+    return 1 / (1 + math.exp(-linear_combination))
 
-z = 1.72
-prob = sigmoid(z)
+linear_combination = 1.72
+predicted_probability = sigmoid(linear_combination)
 
-print("Probability:", prob)
+print("Probability:", predicted_probability)
 
-if prob >= 0.5:
+if predicted_probability >= 0.5:
     print("Class: 1")
 else:
     print("Class: 0")
