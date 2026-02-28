@@ -1,34 +1,34 @@
 import math
 
 def normalize_dataset(data):
-    cols = list(zip(*[d[:-1] for d in data]))
-    mins = [min(c) for c in cols]
-    maxs = [max(c) for c in cols]
+    cols = list(zip(*[row[:-1] for row in data]))
+    mins = [min(column) for column in cols]
+    maxs = [max(column) for column in cols]
 
     normalized = []
     for row in data:
-        norm = [(row[i] - mins[i]) / (maxs[i] - mins[i]) for i in range(len(row)-1)]
-        norm.append(row[-1])
-        normalized.append(norm)
+        normalized_row = [(row[i] - mins[i]) / (maxs[i] - mins[i]) for i in range(len(row)-1)]
+        normalized_row.append(row[-1])
+        normalized.append(normalized_row)
 
     return normalized, mins, maxs
 
-def distance(a, b):
-    return math.sqrt(sum((a[i] - b[i]) ** 2 for i in range(len(a))))
+def euclidean_distance(point_a, point_b):
+    return math.sqrt(sum((point_a[i] - point_b[i]) ** 2 for i in range(len(point_a))))
 
 def predict_knn(new_point, data, k):
     normalized_data, mins, maxs = normalize_dataset(data)
 
-    new_norm = [(new_point[i] - mins[i]) / (maxs[i] - mins[i]) for i in range(len(new_point))]
+    normalized_new_point = [(new_point[i] - mins[i]) / (maxs[i] - mins[i]) for i in range(len(new_point))]
 
     distances = []
     for row in normalized_data:
-        dist = distance(new_norm, row[:-1])
+        dist = euclidean_distance(normalized_new_point, row[:-1])
         distances.append((dist, row[-1]))
 
-    distances.sort(key=lambda x: x[0])
+    distances.sort(key=lambda distance_label_pair: distance_label_pair[0])
     neighbors = distances[:k]
-    classes = [n[1] for n in neighbors]
+    classes = [neighbor[1] for neighbor in neighbors]
 
     return max(set(classes), key=classes.count)
 
